@@ -36,7 +36,6 @@
                 radial-gradient(circle at 85% 85%, rgba(0, 243, 255, 0.14), transparent 40%);
         }
 
-        /* Lightweight Static Perspective Grid (Zero Mobile Lag) */
         .bg-grid {
             position: fixed;
             inset: 0;
@@ -48,7 +47,6 @@
             pointer-events: none;
         }
 
-        /* Navbar */
         nav {
             display: flex;
             justify-content: space-between;
@@ -68,7 +66,6 @@
             text-decoration: none;
         }
 
-        /* Custom Logo Frame */
         .brand-logo {
             width: 44px;
             height: 44px;
@@ -95,7 +92,6 @@
             font-weight: 600;
         }
 
-        /* Nav Right */
         .nav-right {
             display: flex;
             align-items: center;
@@ -121,7 +117,7 @@
             color: #fff;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            transition: transform 0.2s ease;
             box-shadow: 0 4px 15px rgba(188, 19, 254, 0.35);
         }
 
@@ -135,24 +131,21 @@
             font-size: 0.85rem;
         }
 
-        /* Container */
         .container {
             max-width: 1100px;
             margin: 30px auto;
             padding: 0 16px;
         }
 
-        /* Hardware-Accelerated 3D Depth Card (No Heavy Blur Lag) */
         .card-3d {
             background: linear-gradient(145deg, #101830, #090d1c);
             border: 1px solid rgba(0, 243, 255, 0.25);
             border-top: 2px solid var(--neon-cyan);
             border-radius: 20px;
             padding: 28px 22px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
         }
 
-        /* Auth Section */
         #auth-section {
             max-width: 430px;
             margin: 30px auto;
@@ -231,8 +224,7 @@
             color: #e2e8f0;
         }
 
-        /* Dashboard Section */
-        #dashboard-section {
+        #dashboard-section, #viewer-section {
             display: none;
         }
 
@@ -258,7 +250,6 @@
             margin: 6px 0;
         }
 
-        /* Redeem Box */
         .redeem-row {
             display: flex;
             gap: 10px;
@@ -276,10 +267,6 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             outline: none;
-        }
-
-        .redeem-row input:focus {
-            border-color: var(--neon-cyan);
         }
 
         .hosted-list {
@@ -310,7 +297,6 @@
             font-size: 0.85rem;
         }
 
-        /* Toast */
         #toast {
             position: fixed;
             bottom: 20px;
@@ -326,8 +312,8 @@
             z-index: 999;
             text-align: center;
             width: 90%;
-            max-width: 400px;
-            font-size: 0.9rem;
+            max-width: 420px;
+            font-size: 0.88rem;
         }
 
         #toast.show {
@@ -341,8 +327,8 @@
 
     <!-- Navbar -->
     <nav>
-        <a href="#" class="brand">
-            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="HASSAN FF Logo" class="brand-logo">
+        <a href="https://host-by-hassan.vercel.app/" class="brand">
+            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="Logo" class="brand-logo">
             <div class="brand-text">
                 <h1>HASSAN FF</h1>
                 <span>3D CLOUD HOSTING</span>
@@ -359,9 +345,17 @@
     </nav>
 
     <div class="container">
+        <!-- LIVE HOSTED WEBSITE VIEWER (URL Router ?site/project-name) -->
+        <div id="viewer-section" class="card-3d" style="text-align: center; padding: 40px 20px;">
+            <div class="logo-3d" style="margin: 0 auto 15px auto;"><img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" style="width:50px; height:50px; border-radius:12px;" alt="Logo"></div>
+            <h2 id="viewer-title" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); margin-bottom: 10px;">Loading Project...</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px;">Hosted securely on HASSAN FF Cloud</p>
+            <div id="viewer-container" style="width: 100%; min-height: 500px; background: #fff; border-radius: 12px; overflow: hidden;"></div>
+        </div>
+
         <!-- AUTHENTICATION SECTION -->
         <div id="auth-section" class="card-3d">
-            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="HASSAN FF Logo" class="auth-logo-big">
+            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="Logo" class="auth-logo-big">
             <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.35rem; margin-bottom: 6px;">HASSAN FF HOSTING</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">Fast, Smooth & Instant 3D Web Hosting</p>
 
@@ -417,10 +411,10 @@
             <!-- REDEEM CODE SECTION -->
             <div class="card-3d" style="margin-bottom: 24px; border-top-color: var(--neon-purple);">
                 <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 12px;">
-                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Points Code
+                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Code (+1000 Points)
                 </h3>
                 <div class="redeem-row">
-                    <input type="text" id="redeem-input" placeholder="Enter Redeem Code (e.g. HASSAN200)">
+                    <input type="text" id="redeem-input" placeholder="Enter Code (e.g. HASSAN-HOST-1000)">
                     <button class="btn-glow" id="redeem-btn" style="background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));">
                         <i class="fas fa-gift"></i> Redeem Now
                     </button>
@@ -433,8 +427,8 @@
                     <i class="fas fa-rocket" style="color: var(--neon-cyan);"></i> Host New Website (Cost: 1 Point)
                 </h2>
                 <div class="input-group">
-                    <label>Website Title</label>
-                    <input type="text" id="site-title" placeholder="e.g. My Gaming Tool">
+                    <label>Project / Website Name (URL slug)</label>
+                    <input type="text" id="site-slug" placeholder="e.g. my-awesome-tool">
                 </div>
                 <div class="input-group">
                     <label>Upload HTML File OR Paste Code Below</label>
@@ -474,16 +468,16 @@
             getDoc, 
             updateDoc, 
             collection, 
-            addDoc, 
             query, 
             where, 
             getDocs,
             increment,
-            arrayUnion 
+            arrayUnion,
+            deleteDoc 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // =========================================================================
-        // 1. APNI FIREBASE API / PROJECT DETAILS YAHAN PASTE KAREIN
+        // APNI FIREBASE DETAILS YAHAN PASTE KAREIN
         // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDJdnv2pah8vVd8hYjJZ7T23J_fAE2dpd8",
@@ -495,33 +489,15 @@
         };
 
         // =========================================================================
-        // 2. CUSTOM REDEEM CODES SETUP (YAHAN APNE CODES, POINTS AUR TIME LIKHEIN)
+        // REDEEM CODE CONFIGURATION (HASSAN-HOST-1000)
+        // Created: 2026-11-12 18:00:00 | Expiration: 3 DAYS
         // =========================================================================
-        // Formats: "2 SEC", "2 MIN", "2 HR", "2 DAYS", "2 WEEKS", "2 YRS"
-        // createdAt: Jis waqt aap code bana rahe hain (YYYY-MM-DD HH:MM:SS)
-        const REDEEM_CODES = {
-            "HASSAN200": {
-                points: 200,
-                createdAt: "2026-11-12 18:00:00",
-                expiresIn: "2 DAYS"
-            },
-            "VIP500": {
-                points: 500,
-                createdAt: "2026-11-12 18:00:00",
-                expiresIn: "2 WEEKS"
-            },
-            "FAST100": {
-                points: 800,
-                createdAt: "2026-11-12 18:00:00",
-                expiresIn: "2 HR"
-            },
-            "PRO1000": {
-                points: 1000,
-                createdAt: "2026-11-12 18:00:00",
-                expiresIn: "2 YRS"
-            }
+        const REDEEM_CODE_CONFIG = {
+            code: "HASSAN-HOST-1000",
+            points: 1000,
+            createdAt: "2026-11-12 18:00:00",
+            durationMs: 3 * 24 * 60 * 60 * 1000 // exactly 3 DAYS
         };
-        // =========================================================================
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -532,28 +508,49 @@
         let currentPoints = 0;
         let usedCodesList = [];
 
-        // Helper: Parse Expiration Duration ("2 HR", "2 MIN", "2 SEC", "2 DAYS", "2 WEEKS", "2 YRS")
-        function isCodeExpired(createdAtStr, durationStr) {
-            const startTime = new Date(createdAtStr.replace(" ", "T")).getTime();
-            if (isNaN(startTime)) return true;
-
-            const parts = durationStr.trim().toUpperCase().split(/\s+/);
-            const value = parseFloat(parts[0]);
-            const unit = parts[1];
-
-            let ms = 0;
-            if (unit === "SEC" || unit === "SECS") ms = value * 1000;
-            else if (unit === "MIN" || unit === "MINS") ms = value * 60 * 1000;
-            else if (unit === "HR" || unit === "HRS") ms = value * 60 * 60 * 1000;
-            else if (unit === "DAY" || unit === "DAYS") ms = value * 24 * 60 * 60 * 1000;
-            else if (unit === "WEEK" || unit === "WEEKS") ms = value * 7 * 24 * 60 * 60 * 1000;
-            else if (unit === "YR" || unit === "YRS") ms = value * 365 * 24 * 60 * 60 * 1000;
-            else return true;
-
-            return Date.now() > (startTime + ms);
+        // Check URL Router for Live Hosted Site (`?site/project-name`)
+        const hashOrSearch = window.location.search || window.location.hash;
+        if (hashOrSearch.includes("site/")) {
+            const siteSlug = hashOrSearch.split("site/")[1]?.split("/")[0]?.trim();
+            if (siteSlug) {
+                document.getElementById('auth-section').style.display = 'none';
+                document.querySelector('nav').style.display = 'none';
+                document.getElementById('viewer-section').style.display = 'block';
+                loadHostedSiteBySlug(siteSlug);
+            }
         }
 
-        // UI Switch Tabs
+        async function loadHostedSiteBySlug(slug) {
+            try {
+                const docRef = doc(db, "hosted_sites", slug);
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('viewer-title').innerText = data.title;
+                    document.title = data.title + " | HASSAN FF Hosted";
+                    
+                    const iframe = document.createElement('iframe');
+                    iframe.style.width = "100%";
+                    iframe.style.height = "85vh";
+                    iframe.style.border = "none";
+                    document.getElementById('viewer-container').appendChild(iframe);
+                    iframe.contentWindow.document.open();
+                    iframe.contentWindow.document.write(data.htmlCode);
+                    iframe.contentWindow.document.close();
+                } else {
+                    document.getElementById('viewer-title').innerText = "404 - Website Not Found!";
+                    document.getElementById('viewer-container').innerHTML = "<p style='color:red; padding:40px; font-size:1.2rem;'>Ye hosted website mojood nahi hai ya delete ho chuki hai.</p>";
+                }
+            } catch (err) {
+                document.getElementById('viewer-title').innerText = "Error Loading Website";
+            }
+        }
+
+        function isCodeExpired() {
+            const startTime = new Date(REDEEM_CODE_CONFIG.createdAt.replace(" ", "T")).getTime();
+            return Date.now() > (startTime + REDEEM_CODE_CONFIG.durationMs);
+        }
+
         window.switchTab = (mode) => {
             isSignupMode = (mode === 'signup');
             document.getElementById('tab-login').classList.toggle('active', !isSignupMode);
@@ -566,32 +563,31 @@
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
+            setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
-        // Redeem Code Button Logic
+        // Redeem Code Click Logic
         document.getElementById('redeem-btn').addEventListener('click', async () => {
             if (!currentUser) return;
-            const codeInput = document.getElementById('redeem-input').value.trim().toUpperCase();
+            const inputVal = document.getElementById('redeem-input').value.trim().toUpperCase();
 
-            if (!codeInput) {
+            if (!inputVal) {
                 showToast("Please enter a redeem code!");
                 return;
             }
 
-            const codeData = REDEEM_CODES[codeInput];
-            if (!codeData) {
+            if (inputVal !== REDEEM_CODE_CONFIG.code) {
                 showToast("Invalid Redeem Code!");
                 return;
             }
 
-            if (usedCodesList.includes(codeInput)) {
-                showToast("Aap ye code pehle hi redeem kar chuke hain!");
+            if (usedCodesList.includes(REDEEM_CODE_CONFIG.code)) {
+                showToast("THIS CODE IS ALREADY USED! TRY AFTER ADDING NEW CODE.");
                 return;
             }
 
-            if (isCodeExpired(codeData.createdAt, codeData.expiresIn)) {
-                showToast("Ye Redeem Code expire ho chuka hai!");
+            if (isCodeExpired()) {
+                showToast("This Redeem Code has expired (3 Days limit reached)!");
                 return;
             }
 
@@ -601,15 +597,15 @@
             try {
                 const userRef = doc(db, "users", currentUser.uid);
                 await updateDoc(userRef, {
-                    points: increment(codeData.points),
-                    usedCodes: arrayUnion(codeInput)
+                    points: increment(REDEEM_CODE_CONFIG.points),
+                    usedCodes: arrayUnion(REDEEM_CODE_CONFIG.code)
                 });
 
-                currentPoints += codeData.points;
-                usedCodesList.push(codeInput);
+                currentPoints += REDEEM_CODE_CONFIG.points;
+                usedCodesList.push(REDEEM_CODE_CONFIG.code);
                 updatePointsUI();
                 document.getElementById('redeem-input').value = '';
-                showToast(`Success! +${codeData.points} Points aapke account mein add ho gaye!`);
+                showToast(`Success! +${REDEEM_CODE_CONFIG.points} Points added to your account!`);
             } catch (err) {
                 showToast("Error: " + err.message);
             } finally {
@@ -617,22 +613,21 @@
             }
         });
 
-        // File Upload Reader
         document.getElementById('html-file-input').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 document.getElementById('html-code-input').value = event.target.result;
-                if (!document.getElementById('site-title').value) {
-                    document.getElementById('site-title').value = file.name.replace('.html', '');
+                if (!document.getElementById('site-slug').value) {
+                    const cleanName = file.name.replace('.html', '').toLowerCase().replace(/[^a-z0-9]/g, '-');
+                    document.getElementById('site-slug').value = cleanName;
                 }
                 showToast("HTML file loaded!");
             };
             reader.readAsText(file);
         });
 
-        // Auth Form Submit
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('user-email').value.trim();
@@ -659,14 +654,13 @@
             }
         });
 
-        // Logout
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await signOut(auth);
-            showToast("Logged out! Your points are saved.");
+            showToast("Logged out safely. Your points are saved.");
         });
 
-        // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
+            if (window.location.search.includes("site/")) return;
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-section').style.display = 'none';
@@ -704,19 +698,20 @@
             document.getElementById('dash-points').innerText = currentPoints;
         }
 
-        // Deploy Website (-1 Point)
+        // Deploy Website with Clean URL (`?site/project-name`)
         document.getElementById('deploy-btn').addEventListener('click', async () => {
             if (!currentUser) return;
             if (currentPoints <= 0) {
-                showToast("Points khatam ho gaye hain! Naya code redeem karein.");
+                showToast("Aapke points khatam ho chuke hain! Code redeem karein.");
                 return;
             }
 
-            const title = document.getElementById('site-title').value.trim();
+            const slugRaw = document.getElementById('site-slug').value.trim().toLowerCase();
+            const slug = slugRaw.replace(/[^a-z0-9-_]/g, '-');
             const code = document.getElementById('html-code-input').value.trim();
 
-            if (!title || !code) {
-                showToast("Website title aur HTML code darj karein!");
+            if (!slug || !code) {
+                showToast("Please enter a valid project name and HTML code!");
                 return;
             }
 
@@ -725,13 +720,24 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hosting...';
 
             try {
-                await addDoc(collection(db, "hosted_sites"), {
+                // Check if slug already exists
+                const existingDoc = await getDoc(doc(db, "hosted_sites", slug));
+                if (existingDoc.exists()) {
+                    showToast("Ye project name pehle se use mein hai! Doosra naam dein.");
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Deploy Website (-1 Point)';
+                    return;
+                }
+
+                // Save hosted site
+                await setDoc(doc(db, "hosted_sites", slug), {
                     uid: currentUser.uid,
-                    title: title,
+                    title: slug,
                     htmlCode: code,
                     createdAt: new Date().toLocaleString()
                 });
 
+                // Deduct 1 point
                 const userRef = doc(db, "users", currentUser.uid);
                 await updateDoc(userRef, {
                     points: increment(-1)
@@ -740,9 +746,9 @@
                 currentPoints -= 1;
                 updatePointsUI();
 
-                document.getElementById('site-title').value = '';
+                document.getElementById('site-slug').value = '';
                 document.getElementById('html-code-input').value = '';
-                showToast(`Hosted! 1 Point minus hua. Remaining: ${currentPoints}`);
+                showToast(`Hosted Successfully! 1 Point deducted.`);
                 await loadUserSites(currentUser.uid);
             } catch (err) {
                 showToast("Hosting failed: " + err.message);
@@ -766,23 +772,34 @@
             listEl.innerHTML = '';
             querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                const blob = new Blob([data.htmlCode], { type: 'text/html' });
-                const blobUrl = URL.createObjectURL(blob);
+                const siteUrl = `https://host-by-hassan.vercel.app/?site/${data.title}`;
 
                 const item = document.createElement('div');
                 item.className = 'site-item';
                 item.innerHTML = `
                     <div>
-                        <strong style="color: var(--neon-cyan); font-size: 1rem;">${data.title}</strong>
-                        <div style="font-size: 0.78rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
+                        <strong style="color: var(--neon-cyan); font-size: 0.95rem;">/?site/${data.title}</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
                     </div>
-                    <div>
-                        <a href="${blobUrl}" target="_blank" class="btn-visit"><i class="fas fa-external-link-alt"></i> Open Live</a>
+                    <div style="display:flex; gap:8px;">
+                        <a href="${siteUrl}" target="_blank" class="btn-visit"><i class="fas fa-external-link-alt"></i> Open</a>
+                        <button class="btn-danger" onclick="deleteSite('${data.title}')" style="padding: 6px 10px; border-radius:8px; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
                 listEl.appendChild(item);
             });
         }
+
+        window.deleteSite = async (slug) => {
+            if (!confirm(`Aap waqai project "${slug}" delete karna chahte hain?`)) return;
+            try {
+                await deleteDoc(doc(db, "hosted_sites", slug));
+                showToast("Website deleted successfully!");
+                await loadUserSites(currentUser.uid);
+            } catch (err) {
+                showToast("Delete failed: " + err.message);
+            }
+        };
     </script>
 </body>
 </html>
