@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASSAN FF | 3D Cloud Web Hosting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #060812;
+            --card-bg: #0d1326;
+            --neon-cyan: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-pink: #ff007f;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(188, 19, 254, 0.14), transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 243, 255, 0.14), transparent 40%);
+        }
+
+        /* Lightweight Static Perspective Grid (Zero Mobile Lag) */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 5%;
+            background: rgba(6, 8, 18, 0.95);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        /* Custom Logo Frame */
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 14px rgba(0, 243, 255, 0.55);
+        }
+
+        .brand-text h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.25rem;
+            background: linear-gradient(90deg, #fff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .brand-text span {
+            font-size: 0.68rem;
+            color: var(--neon-purple);
+            letter-spacing: 2px;
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Nav Right */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .points-pill {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-cyan);
+            padding: 7px 14px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: var(--neon-cyan);
+            display: none;
+        }
+
+        .btn-glow {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 15px rgba(188, 19, 254, 0.35);
+        }
+
+        .btn-glow:active {
+            transform: scale(0.97);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #ff0055, #ff4b2b);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+
+        /* Hardware-Accelerated 3D Depth Card (No Heavy Blur Lag) */
+        .card-3d {
+            background: linear-gradient(145deg, #101830, #090d1c);
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            border-top: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            padding: 28px 22px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        /* Auth Section */
+        #auth-section {
+            max-width: 430px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .auth-logo-big {
+            width: 74px;
+            height: 74px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 22px rgba(0, 243, 255, 0.5);
+            margin-bottom: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #060812;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 9px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: #060812;
+            border: 1px solid rgba(0, 243, 255, 0.25);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .trial-banner {
+            background: rgba(188, 19, 254, 0.14);
+            border: 1px dashed var(--neon-purple);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            margin-bottom: 18px;
+            color: #e2e8f0;
+        }
+
+        /* Dashboard Section */
+        #dashboard-section {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: linear-gradient(145deg, #101830, #090d1c);
+            border: 1px solid rgba(0, 243, 255, 0.22);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            margin: 6px 0;
+        }
+
+        /* Redeem Box */
+        .redeem-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .redeem-row input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            background: #060812;
+            border: 1px solid rgba(188, 19, 254, 0.45);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            outline: none;
+        }
+
+        .redeem-row input:focus {
+            border-color: var(--neon-cyan);
+        }
+
+        .hosted-list {
+            margin-top: 18px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .site-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: #060812;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border-left: 4px solid var(--neon-cyan);
+        }
+
+        .btn-visit {
+            background: var(--neon-cyan);
+            color: #000;
+            font-weight: 600;
+            padding: 7px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            background: #0d1326;
+            border: 1px solid var(--neon-cyan);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 243, 255, 0.4);
+            transition: transform 0.3s ease;
+            z-index: 999;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            font-size: 0.9rem;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+
+    <!-- Navbar -->
+    <nav>
+        <a href="#" class="brand">
+            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="HASSAN FF Logo" class="brand-logo">
+            <div class="brand-text">
+                <h1>HASSAN FF</h1>
+                <span>3D CLOUD HOSTING</span>
+            </div>
+        </a>
+        <div class="nav-right">
+            <div class="points-pill" id="nav-points">
+                <i class="fas fa-bolt"></i> <span id="points-count">--</span> PTS
+            </div>
+            <button class="btn-glow btn-danger" id="logout-btn" style="display: none;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- AUTHENTICATION SECTION -->
+        <div id="auth-section" class="card-3d">
+            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" alt="HASSAN FF Logo" class="auth-logo-big">
+            <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.35rem; margin-bottom: 6px;">HASSAN FF HOSTING</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 18px;">Fast, Smooth & Instant 3D Web Hosting</p>
+
+            <div class="trial-banner">
+                <i class="fas fa-gift" style="color: var(--neon-cyan);"></i> 
+                Free Trial Bonus: <strong>50 Points</strong> (1 Host = 1 Point)
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+            </div>
+
+            <form id="auth-form">
+                <div class="input-group" id="name-group" style="display: none;">
+                    <label>Full Name</label>
+                    <input type="text" id="user-name" placeholder="Enter your name">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="user-email" placeholder="example@gmail.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="user-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-glow" style="width: 100%; margin-top: 8px;" id="auth-submit-btn">
+                    Login Now
+                </button>
+            </form>
+        </div>
+
+        <!-- HOSTING DASHBOARD SECTION -->
+        <div id="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <i class="fas fa-coins fa-2x" style="color: var(--neon-cyan);"></i>
+                    <h3 id="dash-points">50</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Available Points</p>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-globe fa-2x" style="color: var(--neon-purple);"></i>
+                    <h3 id="dash-sites-count">0</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Hosted Websites</p>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-tag fa-2x" style="color: var(--neon-pink);"></i>
+                    <h3>1 PT</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Cost Per Website</p>
+                </div>
+            </div>
+
+            <!-- REDEEM CODE SECTION -->
+            <div class="card-3d" style="margin-bottom: 24px; border-top-color: var(--neon-purple);">
+                <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 12px;">
+                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Points Code
+                </h3>
+                <div class="redeem-row">
+                    <input type="text" id="redeem-input" placeholder="Enter Redeem Code (e.g. HASSAN200)">
+                    <button class="btn-glow" id="redeem-btn" style="background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));">
+                        <i class="fas fa-gift"></i> Redeem Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- DEPLOY BOX -->
+            <div class="card-3d">
+                <h2 style="font-family: 'Orbitron', sans-serif; font-size: 1.15rem; margin-bottom: 15px;">
+                    <i class="fas fa-rocket" style="color: var(--neon-cyan);"></i> Host New Website (Cost: 1 Point)
+                </h2>
+                <div class="input-group">
+                    <label>Website Title</label>
+                    <input type="text" id="site-title" placeholder="e.g. My Gaming Tool">
+                </div>
+                <div class="input-group">
+                    <label>Upload HTML File OR Paste Code Below</label>
+                    <input type="file" id="html-file-input" accept=".html,.htm" style="margin-bottom: 10px;">
+                    <textarea id="html-code-input" rows="7" placeholder="<!DOCTYPE html><html>... Paste your HTML code here ...</html>"></textarea>
+                </div>
+                <button class="btn-glow" id="deploy-btn" style="width: 100%;">
+                    <i class="fas fa-cloud-upload-alt"></i> Deploy Website (-1 Point)
+                </button>
+            </div>
+
+            <!-- HOSTED WEBSITES LIST -->
+            <div class="card-3d" style="margin-top: 24px;">
+                <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 10px;">Your Live Hosted Websites</h3>
+                <div class="hosted-list" id="hosted-list">
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">No websites hosted yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Notification message</div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc, 
+            updateDoc, 
+            collection, 
+            addDoc, 
+            query, 
+            where, 
+            getDocs,
+            increment,
+            arrayUnion 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // =========================================================================
+        // 1. APNI FIREBASE API / PROJECT DETAILS YAHAN PASTE KAREIN
+        // =========================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJdnv2pah8vVd8hYjJZ7T23J_fAE2dpd8",
+            authDomain: "hosting-1-7441c.firebaseapp.com",
+            projectId: "hosting-1-7441c",
+            storageBucket: "hosting-1-7441c.firebasestorage.app",
+            messagingSenderId: "601588410947",
+            appId: "1:601588410947:web:6686eb6a7d5664324d02f6"
+        };
+
+        // =========================================================================
+        // 2. CUSTOM REDEEM CODES SETUP (YAHAN APNE CODES, POINTS AUR TIME LIKHEIN)
+        // =========================================================================
+        // Formats: "2 SEC", "2 MIN", "2 HR", "2 DAYS", "2 WEEKS", "2 YRS"
+        // createdAt: Jis waqt aap code bana rahe hain (YYYY-MM-DD HH:MM:SS)
+        const REDEEM_CODES = {
+            "HASSAN200": {
+                points: 200,
+                createdAt: "2026-11-12 18:00:00",
+                expiresIn: "2 DAYS"
+            },
+            "VIP500": {
+                points: 500,
+                createdAt: "2026-11-12 18:00:00",
+                expiresIn: "2 WEEKS"
+            },
+            "FAST100": {
+                points: 800,
+                createdAt: "2026-11-12 18:00:00",
+                expiresIn: "2 HR"
+            },
+            "PRO1000": {
+                points: 1000,
+                createdAt: "2026-11-12 18:00:00",
+                expiresIn: "2 YRS"
+            }
+        };
+        // =========================================================================
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let isSignupMode = false;
+        let currentUser = null;
+        let currentPoints = 0;
+        let usedCodesList = [];
+
+        // Helper: Parse Expiration Duration ("2 HR", "2 MIN", "2 SEC", "2 DAYS", "2 WEEKS", "2 YRS")
+        function isCodeExpired(createdAtStr, durationStr) {
+            const startTime = new Date(createdAtStr.replace(" ", "T")).getTime();
+            if (isNaN(startTime)) return true;
+
+            const parts = durationStr.trim().toUpperCase().split(/\s+/);
+            const value = parseFloat(parts[0]);
+            const unit = parts[1];
+
+            let ms = 0;
+            if (unit === "SEC" || unit === "SECS") ms = value * 1000;
+            else if (unit === "MIN" || unit === "MINS") ms = value * 60 * 1000;
+            else if (unit === "HR" || unit === "HRS") ms = value * 60 * 60 * 1000;
+            else if (unit === "DAY" || unit === "DAYS") ms = value * 24 * 60 * 60 * 1000;
+            else if (unit === "WEEK" || unit === "WEEKS") ms = value * 7 * 24 * 60 * 60 * 1000;
+            else if (unit === "YR" || unit === "YRS") ms = value * 365 * 24 * 60 * 60 * 1000;
+            else return true;
+
+            return Date.now() > (startTime + ms);
+        }
+
+        // UI Switch Tabs
+        window.switchTab = (mode) => {
+            isSignupMode = (mode === 'signup');
+            document.getElementById('tab-login').classList.toggle('active', !isSignupMode);
+            document.getElementById('tab-signup').classList.toggle('active', isSignupMode);
+            document.getElementById('name-group').style.display = isSignupMode ? 'block' : 'none';
+            document.getElementById('auth-submit-btn').innerText = isSignupMode ? 'Create Account (+50 Points)' : 'Login Now';
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // Redeem Code Button Logic
+        document.getElementById('redeem-btn').addEventListener('click', async () => {
+            if (!currentUser) return;
+            const codeInput = document.getElementById('redeem-input').value.trim().toUpperCase();
+
+            if (!codeInput) {
+                showToast("Please enter a redeem code!");
+                return;
+            }
+
+            const codeData = REDEEM_CODES[codeInput];
+            if (!codeData) {
+                showToast("Invalid Redeem Code!");
+                return;
+            }
+
+            if (usedCodesList.includes(codeInput)) {
+                showToast("Aap ye code pehle hi redeem kar chuke hain!");
+                return;
+            }
+
+            if (isCodeExpired(codeData.createdAt, codeData.expiresIn)) {
+                showToast("Ye Redeem Code expire ho chuka hai!");
+                return;
+            }
+
+            const btn = document.getElementById('redeem-btn');
+            btn.disabled = true;
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, {
+                    points: increment(codeData.points),
+                    usedCodes: arrayUnion(codeInput)
+                });
+
+                currentPoints += codeData.points;
+                usedCodesList.push(codeInput);
+                updatePointsUI();
+                document.getElementById('redeem-input').value = '';
+                showToast(`Success! +${codeData.points} Points aapke account mein add ho gaye!`);
+            } catch (err) {
+                showToast("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+
+        // File Upload Reader
+        document.getElementById('html-file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('html-code-input').value = event.target.result;
+                if (!document.getElementById('site-title').value) {
+                    document.getElementById('site-title').value = file.name.replace('.html', '');
+                }
+                showToast("HTML file loaded!");
+            };
+            reader.readAsText(file);
+        });
+
+        // Auth Form Submit
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('user-email').value.trim();
+            const password = document.getElementById('user-password').value;
+            const fullName = document.getElementById('user-name').value.trim() || "Hassan FF User";
+
+            try {
+                if (isSignupMode) {
+                    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                    await setDoc(doc(db, "users", userCred.user.uid), {
+                        name: fullName,
+                        email: email,
+                        points: 50,
+                        usedCodes: [],
+                        createdAt: new Date().toISOString()
+                    });
+                    showToast("Account Created! 50 Free Points Added!");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showToast("Login Successful!");
+                }
+            } catch (err) {
+                showToast("Error: " + err.message);
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await signOut(auth);
+            showToast("Logged out! Your points are saved.");
+        });
+
+        // Auth State Observer
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('nav-points').style.display = 'block';
+                document.getElementById('logout-btn').style.display = 'inline-block';
+                await loadUserData(user.uid);
+                await loadUserSites(user.uid);
+            } else {
+                currentUser = null;
+                document.getElementById('auth-section').style.display = 'block';
+                document.getElementById('dashboard-section').style.display = 'none';
+                document.getElementById('nav-points').style.display = 'none';
+                document.getElementById('logout-btn').style.display = 'none';
+            }
+        });
+
+        async function loadUserData(uid) {
+            const userRef = doc(db, "users", uid);
+            const snap = await getDoc(userRef);
+            if (snap.exists()) {
+                const data = snap.data();
+                currentPoints = data.points ?? 50;
+                usedCodesList = data.usedCodes || [];
+            } else {
+                currentPoints = 50;
+                usedCodesList = [];
+                await setDoc(userRef, { email: currentUser.email, points: 50, usedCodes: [] });
+            }
+            updatePointsUI();
+        }
+
+        function updatePointsUI() {
+            document.getElementById('points-count').innerText = currentPoints;
+            document.getElementById('dash-points').innerText = currentPoints;
+        }
+
+        // Deploy Website (-1 Point)
+        document.getElementById('deploy-btn').addEventListener('click', async () => {
+            if (!currentUser) return;
+            if (currentPoints <= 0) {
+                showToast("Points khatam ho gaye hain! Naya code redeem karein.");
+                return;
+            }
+
+            const title = document.getElementById('site-title').value.trim();
+            const code = document.getElementById('html-code-input').value.trim();
+
+            if (!title || !code) {
+                showToast("Website title aur HTML code darj karein!");
+                return;
+            }
+
+            const btn = document.getElementById('deploy-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hosting...';
+
+            try {
+                await addDoc(collection(db, "hosted_sites"), {
+                    uid: currentUser.uid,
+                    title: title,
+                    htmlCode: code,
+                    createdAt: new Date().toLocaleString()
+                });
+
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, {
+                    points: increment(-1)
+                });
+
+                currentPoints -= 1;
+                updatePointsUI();
+
+                document.getElementById('site-title').value = '';
+                document.getElementById('html-code-input').value = '';
+                showToast(`Hosted! 1 Point minus hua. Remaining: ${currentPoints}`);
+                await loadUserSites(currentUser.uid);
+            } catch (err) {
+                showToast("Hosting failed: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Deploy Website (-1 Point)';
+            }
+        });
+
+        async function loadUserSites(uid) {
+            const q = query(collection(db, "hosted_sites"), where("uid", "==", uid));
+            const querySnapshot = await getDocs(q);
+            const listEl = document.getElementById('hosted-list');
+            document.getElementById('dash-sites-count').innerText = querySnapshot.size;
+
+            if (querySnapshot.empty) {
+                listEl.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No websites hosted yet.</p>';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const blob = new Blob([data.htmlCode], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+
+                const item = document.createElement('div');
+                item.className = 'site-item';
+                item.innerHTML = `
+                    <div>
+                        <strong style="color: var(--neon-cyan); font-size: 1rem;">${data.title}</strong>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
+                    </div>
+                    <div>
+                        <a href="${blobUrl}" target="_blank" class="btn-visit"><i class="fas fa-external-link-alt"></i> Open Live</a>
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
