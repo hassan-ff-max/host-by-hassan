@@ -346,11 +346,8 @@
 
     <div class="container">
         <!-- LIVE HOSTED WEBSITE VIEWER -->
-        <div id="viewer-section" class="card-3d" style="text-align: center; padding: 40px 20px;">
-            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" style="width:55px; height:55px; border-radius:14px; border:2px solid var(--neon-cyan); margin-bottom: 12px;" alt="Logo">
-            <h2 id="viewer-title" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); margin-bottom: 10px;">Loading Project...</h2>
-            <p style="color: var(--text-muted); margin-bottom: 25px;">Hosted securely on HASSAN FF Cloud</p>
-            <div id="viewer-container" style="width: 100%; min-height: 500px; background: #fff; border-radius: 12px; overflow: hidden;"></div>
+        <div id="viewer-section" style="display: none; width: 100%; min-height: 100vh;">
+            <div id="viewer-container" style="width: 100%; height: 100vh; background: #fff; overflow: hidden;"></div>
         </div>
 
         <!-- AUTHENTICATION SECTION -->
@@ -476,9 +473,6 @@
             deleteDoc 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // =========================================================================
-        // FIREBASE CONFIGURATION (HASSAN FF HOSTING)
-        // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDJdnv2pah8vVd8hYjJZ7T23J_fAE2dpd8",
             authDomain: "hosting-1-7441c.firebaseapp.com",
@@ -488,49 +482,33 @@
             appId: "1:601588410947:web:6686eb6a7d5664324d02f6"
         };
 
-        // =========================================================================
-        // 3 CUSTOM REDEEM CODES SETUP
-        // =========================================================================
         const REDEEM_CODES = {
-            "HASSANPROMO": {
-                points: 200,
-                createdAt: "2026-11-12 19:00:00",
-                duration: "3DAYS"
-            },
-            "HOSTNOW": {
-                points: 500,
-                createdAt: "2026-11-12 19:00:00",
-                duration: "5DAYS"
-            },
-            "CREATENOW": {
-                points: 1000,
-                createdAt: "2026-11-12 19:00:00",
-                duration: "1WEEK"
-            }
+            "HOSTINGXPROMO": { points: 2000, createdAt: "2026-11-12 19:00:00", duration: "1WEEK" },
+            "HASSANXPROMO": { points: 500, createdAt: "2026-11-12 19:00:00", duration: "1WEEK" },
+            "CODEXPROMO": { points: 1000, createdAt: "2026-11-12 19:00:00", duration: "1WEEK" }
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        // Force Long Polling prevents "client is offline" error on mobile networks
-        const db = initializeFirestore(app, {
-            experimentalForceLongPolling: true
-        });
+        const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
         let isSignupMode = false;
         let currentUser = null;
         let currentPoints = 50;
         let usedCodesList = [];
 
-        // Check URL Router for Live Hosted Site (`?site/project-name`)
-        const hashOrSearch = window.location.search || window.location.hash;
-        if (hashOrSearch.includes("site/")) {
-            const siteSlug = hashOrSearch.split("site/")[1]?.split("/")[0]?.trim();
-            if (siteSlug) {
-                document.getElementById('auth-section').style.display = 'none';
-                document.querySelector('nav').style.display = 'none';
-                document.getElementById('viewer-section').style.display = 'block';
-                loadHostedSiteBySlug(siteSlug);
-            }
+        // Check URL Router for Live Hosted Site (`?site=project-name`)
+        const urlParams = new URLSearchParams(window.location.search);
+        const siteSlug = urlParams.get("site");
+
+        if (siteSlug) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.querySelector('nav').style.display = 'none';
+            document.querySelector('.container').style.maxWidth = '100%';
+            document.querySelector('.container').style.padding = '0';
+            document.querySelector('.container').style.margin = '0';
+            document.getElementById('viewer-section').style.display = 'block';
+            loadHostedSiteBySlug(siteSlug.trim());
         }
 
         async function loadHostedSiteBySlug(slug) {
@@ -539,23 +517,21 @@
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
                     const data = snap.data();
-                    document.getElementById('viewer-title').innerText = data.title;
                     document.title = data.title + " | HASSAN FF Hosted";
                     
                     const iframe = document.createElement('iframe');
                     iframe.style.width = "100%";
-                    iframe.style.height = "85vh";
+                    iframe.style.height = "100vh";
                     iframe.style.border = "none";
                     document.getElementById('viewer-container').appendChild(iframe);
                     iframe.contentWindow.document.open();
                     iframe.contentWindow.document.write(data.htmlCode);
                     iframe.contentWindow.document.close();
                 } else {
-                    document.getElementById('viewer-title').innerText = "404 - Website Not Found!";
-                    document.getElementById('viewer-container').innerHTML = "<p style='color:red; padding:40px; font-size:1.2rem;'>Ye hosted website mojood nahi hai ya delete ho chuki hai.</p>";
+                    document.getElementById('viewer-container').innerHTML = "<div style='text-align:center; padding-top:100px; font-family:sans-serif; color:#333;'><h2>404 - Website Not Found!</h2><p>Ye hosted website mojood nahi hai ya delete ho chuki hai.</p></div>";
                 }
             } catch (err) {
-                document.getElementById('viewer-title').innerText = "Error Loading Website";
+                document.getElementById('viewer-container').innerHTML = "<div style='text-align:center; padding-top:100px; font-family:sans-serif; color:red;'><h2>Error Loading Website</h2></div>";
             }
         }
 
@@ -685,7 +661,7 @@
         });
 
         onAuthStateChanged(auth, async (user) => {
-            if (window.location.search.includes("site/")) return;
+            if (siteSlug) return;
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-section').style.display = 'none';
@@ -801,13 +777,13 @@
                 listEl.innerHTML = '';
                 querySnapshot.forEach((docSnap) => {
                     const data = docSnap.data();
-                    const siteUrl = `https://host-by-hassan.vercel.app/?site/${data.title}`;
+                    const siteUrl = `https://host-by-hassan.vercel.app/?site=${data.title}`;
 
                     const item = document.createElement('div');
                     item.className = 'site-item';
                     item.innerHTML = `
                         <div>
-                            <strong style="color: var(--neon-cyan); font-size: 0.95rem;">/?site/${data.title}</strong>
+                            <strong style="color: var(--neon-cyan); font-size: 0.95rem;">/?site=${data.title}</strong>
                             <div style="font-size: 0.75rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
                         </div>
                         <div style="display:flex; gap:8px;">
