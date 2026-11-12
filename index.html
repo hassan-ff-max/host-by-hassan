@@ -336,7 +336,7 @@
         </a>
         <div class="nav-right">
             <div class="points-pill" id="nav-points">
-                <i class="fas fa-bolt"></i> <span id="points-count">--</span> PTS
+                <i class="fas fa-bolt"></i> <span id="points-count">0</span> PTS
             </div>
             <button class="btn-glow btn-danger" id="logout-btn" style="display: none;">
                 <i class="fas fa-sign-out-alt"></i> Logout
@@ -345,9 +345,9 @@
     </nav>
 
     <div class="container">
-        <!-- LIVE HOSTED WEBSITE VIEWER (URL Router ?site/project-name) -->
+        <!-- LIVE HOSTED WEBSITE VIEWER -->
         <div id="viewer-section" class="card-3d" style="text-align: center; padding: 40px 20px;">
-            <div class="logo-3d" style="margin: 0 auto 15px auto;"><img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" style="width:50px; height:50px; border-radius:12px;" alt="Logo"></div>
+            <img src="https://i.ibb.co/21qmyHBJ/jawadmd.jpg" style="width:55px; height:55px; border-radius:14px; border:2px solid var(--neon-cyan); margin-bottom: 12px;" alt="Logo">
             <h2 id="viewer-title" style="font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); margin-bottom: 10px;">Loading Project...</h2>
             <p style="color: var(--text-muted); margin-bottom: 25px;">Hosted securely on HASSAN FF Cloud</p>
             <div id="viewer-container" style="width: 100%; min-height: 500px; background: #fff; border-radius: 12px; overflow: hidden;"></div>
@@ -393,7 +393,7 @@
             <div class="stats-grid">
                 <div class="stat-box">
                     <i class="fas fa-coins fa-2x" style="color: var(--neon-cyan);"></i>
-                    <h3 id="dash-points">50</h3>
+                    <h3 id="dash-points">0</h3>
                     <p style="color: var(--text-muted); font-size: 0.85rem;">Available Points</p>
                 </div>
                 <div class="stat-box">
@@ -489,14 +489,13 @@
         };
 
         // =========================================================================
-        // REDEEM CODE CONFIGURATION (HASSAN-HOST-1000)
-        // Created: 2026-11-12 18:00:00 | Expiration: 3 DAYS
+        // REDEEM CODE CONFIGURATION
         // =========================================================================
         const REDEEM_CODE_CONFIG = {
             code: "HASSAN-HOST-1000",
             points: 1000,
             createdAt: "2026-11-12 18:00:00",
-            durationMs: 3 * 24 * 60 * 60 * 1000 // exactly 3 DAYS
+            durationMs: 3 * 24 * 60 * 60 * 1000 // 3 DAYS
         };
 
         const app = initializeApp(firebaseConfig);
@@ -505,7 +504,7 @@
 
         let isSignupMode = false;
         let currentUser = null;
-        let currentPoints = 0;
+        let currentPoints = 50;
         let usedCodesList = [];
 
         // Check URL Router for Live Hosted Site (`?site/project-name`)
@@ -683,7 +682,7 @@
             const snap = await getDoc(userRef);
             if (snap.exists()) {
                 const data = snap.data();
-                currentPoints = data.points ?? 50;
+                currentPoints = Number(data.points ?? 50);
                 usedCodesList = data.usedCodes || [];
             } else {
                 currentPoints = 50;
@@ -698,11 +697,13 @@
             document.getElementById('dash-points').innerText = currentPoints;
         }
 
-        // Deploy Website with Clean URL (`?site/project-name`)
+        // Deploy Website
         document.getElementById('deploy-btn').addEventListener('click', async () => {
             if (!currentUser) return;
-            if (currentPoints <= 0) {
-                showToast("Aapke points khatam ho chuke hain! Code redeem karein.");
+            
+            // Ensure points check works reliably
+            if (Number(currentPoints) <= 0) {
+                showToast("Aapke points khatam ho gaye hain! Code redeem karein.");
                 return;
             }
 
@@ -720,7 +721,6 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hosting...';
 
             try {
-                // Check if slug already exists
                 const existingDoc = await getDoc(doc(db, "hosted_sites", slug));
                 if (existingDoc.exists()) {
                     showToast("Ye project name pehle se use mein hai! Doosra naam dein.");
@@ -729,7 +729,6 @@
                     return;
                 }
 
-                // Save hosted site
                 await setDoc(doc(db, "hosted_sites", slug), {
                     uid: currentUser.uid,
                     title: slug,
@@ -737,7 +736,6 @@
                     createdAt: new Date().toLocaleString()
                 });
 
-                // Deduct 1 point
                 const userRef = doc(db, "users", currentUser.uid);
                 await updateDoc(userRef, {
                     points: increment(-1)
