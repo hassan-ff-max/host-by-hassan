@@ -411,10 +411,10 @@
             <!-- REDEEM CODE SECTION -->
             <div class="card-3d" style="margin-bottom: 24px; border-top-color: var(--neon-purple);">
                 <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 12px;">
-                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Code (+900 Points)
+                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Points Code
                 </h3>
                 <div class="redeem-row">
-                    <input type="text" id="redeem-input" placeholder="Enter Code (e.g. HSN786FF)">
+                    <input type="text" id="redeem-input" placeholder="Enter Redeem Code">
                     <button class="btn-glow" id="redeem-btn" style="background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));">
                         <i class="fas fa-gift"></i> Redeem Now
                     </button>
@@ -462,7 +462,7 @@
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { 
-            getFirestore, 
+            initializeFirestore,
             doc, 
             setDoc, 
             getDoc, 
@@ -477,7 +477,7 @@
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         // =========================================================================
-        // APNI FIREBASE DETAILS YAHAN PASTE KAREIN
+        // FIREBASE CONFIGURATION (HASSAN FF HOSTING)
         // =========================================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDJdnv2pah8vVd8hYjJZ7T23J_fAE2dpd8",
@@ -489,18 +489,32 @@
         };
 
         // =========================================================================
-        // REDEEM CODE CONFIGURATION (HSN786FF)
+        // 3 CUSTOM REDEEM CODES SETUP
         // =========================================================================
-        const REDEEM_CODE_CONFIG = {
-            code: "HSN786FF",
-            points: 900,
-            createdAt: "2026-11-12 18:00:00",
-            duration: "3DAYS" // Clean Expiration Format
+        const REDEEM_CODES = {
+            "HASSANPROMO": {
+                points: 200,
+                createdAt: "2026-11-12 19:00:00",
+                duration: "3DAYS"
+            },
+            "HOSTNOW": {
+                points: 500,
+                createdAt: "2026-11-12 19:00:00",
+                duration: "5DAYS"
+            },
+            "CREATENOW": {
+                points: 1000,
+                createdAt: "2026-11-12 19:00:00",
+                duration: "1WEEK"
+            }
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+        // Force Long Polling prevents "client is offline" error on mobile networks
+        const db = initializeFirestore(app, {
+            experimentalForceLongPolling: true
+        });
 
         let isSignupMode = false;
         let currentUser = null;
@@ -545,20 +559,20 @@
             }
         }
 
-        function isCodeExpired() {
-            const startTime = new Date(REDEEM_CODE_CONFIG.createdAt.replace(" ", "T")).getTime();
-            let durationMs = 3 * 24 * 60 * 60 * 1000; // default 3 days
+        function isCodeExpired(createdAtStr, durationStr) {
+            const startTime = new Date(createdAtStr.replace(" ", "T")).getTime();
+            const dur = durationStr.toUpperCase().trim();
+            const num = parseFloat(dur) || 1;
+            let ms = 0;
 
-            const durStr = REDEEM_CODE_CONFIG.duration.toUpperCase().trim();
-            if (durStr.includes("DAY")) {
-                const days = parseInt(durStr) || 3;
-                durationMs = days * 24 * 60 * 60 * 1000;
-            } else if (durStr.includes("HR")) {
-                const hrs = parseInt(durStr) || 1;
-                durationMs = hrs * 60 * 60 * 1000;
-            }
+            if (dur.includes("SEC")) ms = num * 1000;
+            else if (dur.includes("MIN")) ms = num * 60 * 1000;
+            else if (dur.includes("HR")) ms = num * 60 * 60 * 1000;
+            else if (dur.includes("DAY")) ms = num * 24 * 60 * 60 * 1000;
+            else if (dur.includes("WEEK")) ms = num * 7 * 24 * 60 * 60 * 1000;
+            else if (dur.includes("YR")) ms = num * 365 * 24 * 60 * 60 * 1000;
 
-            return Date.now() > (startTime + durationMs);
+            return Date.now() > (startTime + ms);
         }
 
         window.switchTab = (mode) => {
@@ -576,7 +590,7 @@
             setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
-        // Redeem Code Click Logic
+        // Redeem Code Logic
         document.getElementById('redeem-btn').addEventListener('click', async () => {
             if (!currentUser) return;
             const inputVal = document.getElementById('redeem-input').value.trim().toUpperCase();
@@ -586,17 +600,18 @@
                 return;
             }
 
-            if (inputVal !== REDEEM_CODE_CONFIG.code) {
+            const codeObj = REDEEM_CODES[inputVal];
+            if (!codeObj) {
                 showToast("Invalid Redeem Code!");
                 return;
             }
 
-            if (usedCodesList.includes(REDEEM_CODE_CONFIG.code)) {
+            if (usedCodesList.includes(inputVal)) {
                 showToast("THIS CODE IS ALREADY USED! TRY AFTER ADDING NEW CODE.");
                 return;
             }
 
-            if (isCodeExpired()) {
+            if (isCodeExpired(codeObj.createdAt, codeObj.duration)) {
                 showToast("This Redeem Code has expired!");
                 return;
             }
@@ -606,16 +621,16 @@
 
             try {
                 const userRef = doc(db, "users", currentUser.uid);
-                await updateDoc(userRef, {
-                    points: increment(REDEEM_CODE_CONFIG.points),
-                    usedCodes: arrayUnion(REDEEM_CODE_CONFIG.code)
-                });
+                await setDoc(userRef, {
+                    points: increment(codeObj.points),
+                    usedCodes: arrayUnion(inputVal)
+                }, { merge: true });
 
-                currentPoints += REDEEM_CODE_CONFIG.points;
-                usedCodesList.push(REDEEM_CODE_CONFIG.code);
+                currentPoints += codeObj.points;
+                usedCodesList.push(inputVal);
                 updatePointsUI();
                 document.getElementById('redeem-input').value = '';
-                showToast(`Success! +${REDEEM_CODE_CONFIG.points} Points added to your account!`);
+                showToast(`Success! +${codeObj.points} Points added to your account!`);
             } catch (err) {
                 showToast("Error: " + err.message);
             } finally {
@@ -689,18 +704,23 @@
         });
 
         async function loadUserData(uid) {
-            const userRef = doc(db, "users", uid);
-            const snap = await getDoc(userRef);
-            if (snap.exists()) {
-                const data = snap.data();
-                currentPoints = Number(data.points ?? 50);
-                usedCodesList = data.usedCodes || [];
-            } else {
-                currentPoints = 50;
-                usedCodesList = [];
-                await setDoc(userRef, { email: currentUser.email, points: 50, usedCodes: [] });
+            try {
+                const userRef = doc(db, "users", uid);
+                const snap = await getDoc(userRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    currentPoints = Number(data.points ?? 50);
+                    usedCodesList = data.usedCodes || [];
+                } else {
+                    currentPoints = 50;
+                    usedCodesList = [];
+                    await setDoc(userRef, { email: currentUser.email, points: 50, usedCodes: [] });
+                }
+                updatePointsUI();
+            } catch (err) {
+                console.error("Load user data error:", err);
+                updatePointsUI();
             }
-            updatePointsUI();
         }
 
         function updatePointsUI() {
@@ -747,9 +767,9 @@
                 });
 
                 const userRef = doc(db, "users", currentUser.uid);
-                await updateDoc(userRef, {
+                await setDoc(userRef, {
                     points: increment(-1)
-                });
+                }, { merge: true });
 
                 currentPoints -= 1;
                 updatePointsUI();
@@ -767,35 +787,39 @@
         });
 
         async function loadUserSites(uid) {
-            const q = query(collection(db, "hosted_sites"), where("uid", "==", uid));
-            const querySnapshot = await getDocs(q);
-            const listEl = document.getElementById('hosted-list');
-            document.getElementById('dash-sites-count').innerText = querySnapshot.size;
+            try {
+                const q = query(collection(db, "hosted_sites"), where("uid", "==", uid));
+                const querySnapshot = await getDocs(q);
+                const listEl = document.getElementById('hosted-list');
+                document.getElementById('dash-sites-count').innerText = querySnapshot.size;
 
-            if (querySnapshot.empty) {
-                listEl.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No websites hosted yet.</p>';
-                return;
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No websites hosted yet.</p>';
+                    return;
+                }
+
+                listEl.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const siteUrl = `https://host-by-hassan.vercel.app/?site/${data.title}`;
+
+                    const item = document.createElement('div');
+                    item.className = 'site-item';
+                    item.innerHTML = `
+                        <div>
+                            <strong style="color: var(--neon-cyan); font-size: 0.95rem;">/?site/${data.title}</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <a href="${siteUrl}" target="_blank" class="btn-visit"><i class="fas fa-external-link-alt"></i> Open</a>
+                            <button class="btn-danger" onclick="deleteSite('${data.title}')" style="padding: 6px 10px; border-radius:8px; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    `;
+                    listEl.appendChild(item);
+                });
+            } catch (err) {
+                console.error("Load sites error:", err);
             }
-
-            listEl.innerHTML = '';
-            querySnapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                const siteUrl = `https://host-by-hassan.vercel.app/?site/${data.title}`;
-
-                const item = document.createElement('div');
-                item.className = 'site-item';
-                item.innerHTML = `
-                    <div>
-                        <strong style="color: var(--neon-cyan); font-size: 0.95rem;">/?site/${data.title}</strong>
-                        <div style="font-size: 0.75rem; color: var(--text-muted);">Hosted: ${data.createdAt}</div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <a href="${siteUrl}" target="_blank" class="btn-visit"><i class="fas fa-external-link-alt"></i> Open</a>
-                        <button class="btn-danger" onclick="deleteSite('${data.title}')" style="padding: 6px 10px; border-radius:8px; border:none; cursor:pointer;"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                listEl.appendChild(item);
-            });
         }
 
         window.deleteSite = async (slug) => {
