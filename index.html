@@ -336,7 +336,7 @@
         </a>
         <div class="nav-right">
             <div class="points-pill" id="nav-points">
-                <i class="fas fa-bolt"></i> <span id="points-count">0</span> PTS
+                <i class="fas fa-bolt"></i> <span id="points-count">50</span> PTS
             </div>
             <button class="btn-glow btn-danger" id="logout-btn" style="display: none;">
                 <i class="fas fa-sign-out-alt"></i> Logout
@@ -393,7 +393,7 @@
             <div class="stats-grid">
                 <div class="stat-box">
                     <i class="fas fa-coins fa-2x" style="color: var(--neon-cyan);"></i>
-                    <h3 id="dash-points">0</h3>
+                    <h3 id="dash-points">50</h3>
                     <p style="color: var(--text-muted); font-size: 0.85rem;">Available Points</p>
                 </div>
                 <div class="stat-box">
@@ -411,10 +411,10 @@
             <!-- REDEEM CODE SECTION -->
             <div class="card-3d" style="margin-bottom: 24px; border-top-color: var(--neon-purple);">
                 <h3 style="font-family: 'Orbitron', sans-serif; font-size: 1.1rem; margin-bottom: 12px;">
-                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Code (+1000 Points)
+                    <i class="fas fa-ticket-alt" style="color: var(--neon-purple);"></i> Redeem Bonus Code (+900 Points)
                 </h3>
                 <div class="redeem-row">
-                    <input type="text" id="redeem-input" placeholder="Enter Code (e.g. HASSAN-HOST-1000)">
+                    <input type="text" id="redeem-input" placeholder="Enter Code (e.g. HSN786FF)">
                     <button class="btn-glow" id="redeem-btn" style="background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));">
                         <i class="fas fa-gift"></i> Redeem Now
                     </button>
@@ -489,13 +489,13 @@
         };
 
         // =========================================================================
-        // REDEEM CODE CONFIGURATION
+        // REDEEM CODE CONFIGURATION (HSN786FF)
         // =========================================================================
         const REDEEM_CODE_CONFIG = {
-            code: "HASSAN-HOST-1000",
-            points: 1000,
+            code: "HSN786FF",
+            points: 900,
             createdAt: "2026-11-12 18:00:00",
-            durationMs: 3 * 24 * 60 * 60 * 1000 // 3 DAYS
+            duration: "3DAYS" // Clean Expiration Format
         };
 
         const app = initializeApp(firebaseConfig);
@@ -547,7 +547,18 @@
 
         function isCodeExpired() {
             const startTime = new Date(REDEEM_CODE_CONFIG.createdAt.replace(" ", "T")).getTime();
-            return Date.now() > (startTime + REDEEM_CODE_CONFIG.durationMs);
+            let durationMs = 3 * 24 * 60 * 60 * 1000; // default 3 days
+
+            const durStr = REDEEM_CODE_CONFIG.duration.toUpperCase().trim();
+            if (durStr.includes("DAY")) {
+                const days = parseInt(durStr) || 3;
+                durationMs = days * 24 * 60 * 60 * 1000;
+            } else if (durStr.includes("HR")) {
+                const hrs = parseInt(durStr) || 1;
+                durationMs = hrs * 60 * 60 * 1000;
+            }
+
+            return Date.now() > (startTime + durationMs);
         }
 
         window.switchTab = (mode) => {
@@ -586,7 +597,7 @@
             }
 
             if (isCodeExpired()) {
-                showToast("This Redeem Code has expired (3 Days limit reached)!");
+                showToast("This Redeem Code has expired!");
                 return;
             }
 
@@ -701,7 +712,6 @@
         document.getElementById('deploy-btn').addEventListener('click', async () => {
             if (!currentUser) return;
             
-            // Ensure points check works reliably
             if (Number(currentPoints) <= 0) {
                 showToast("Aapke points khatam ho gaye hain! Code redeem karein.");
                 return;
